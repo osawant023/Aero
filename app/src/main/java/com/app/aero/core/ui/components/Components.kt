@@ -1,4 +1,4 @@
-package com.app.aero.ui.theme
+package com.app.aero.core.ui.components
 
 import android.content.res.Configuration
 import androidx.compose.animation.animateColorAsState
@@ -23,6 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.aero.core.ui.theme.AeroTheme
+import com.app.aero.core.ui.theme.LocalSpacing
 import kotlinx.coroutines.delay
 
 /* ---------------------------------------------------
@@ -632,7 +634,10 @@ fun DesignSystemPreview() {
                📈 PRICE ROW
             -------------------------------- */
 
-            Surface(shape = MaterialTheme.shapes.medium, color = MaterialTheme.colorScheme.surface) {
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.surface
+            ) {
                 Column {
                     AppPriceRow(
                         symbol = "NVDA", exchange = "NASDAQ",
@@ -681,7 +686,7 @@ fun DesignSystemPreview() {
     }
 }
 
-@Preview(name = "Light")
+@Preview(name = "Light", showSystemUi = true, showBackground = true)
 @Composable fun PreviewLight() { DesignSystemPreview() }
 
 @Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)

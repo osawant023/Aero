@@ -1,4 +1,4 @@
-package com.app.aero.ui.theme
+package com.app.aero.core.ui.theme
 
 
 import android.os.Build
@@ -14,31 +14,47 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
     primary = AppDarkColors.Primary,
+    onPrimary = AppDarkColors.onPrimary,
+    onPrimaryContainer = AppDarkColors.onPrimary,
+
     secondary = AppDarkColors.Secondary,
+    onSecondary = AppDarkColors.onSecondary,
+    onSecondaryContainer = AppDarkColors.onSecondary,
+
     tertiary = AppDarkColors.Tertiary,
+    onTertiary = AppDarkColors.onTertiary,
 
-    background = AppDarkColors.SurfaceLow,
-    surface = AppDarkColors.SurfaceLowest,
+    background = AppDarkColors.Background,
+    surface = AppDarkColors.Surface,
+    onSurface = AppDarkColors.onSurface,
 
-    onSurface = AppDarkColors.OnSurface
+    surfaceTint = AppDarkColors.Primary
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = AppColors.Primary,
+    onPrimary = AppColors.onPrimary,
+    onPrimaryContainer = AppColors.onPrimary,
+
     secondary = AppColors.Secondary,
+    onSecondary = AppColors.onSecondary,
+    onSecondaryContainer = AppColors.onSecondary,
+
     tertiary = AppColors.Tertiary,
+    onTertiary = AppColors.onTertiary,
 
-    background = AppColors.SurfaceLow,
-    surface = AppColors.SurfaceLowest,
+    background = AppColors.Background,
+    surface = AppColors.Surface,
+    onSurface = AppColors.onSurface,
 
-    onSurface = AppColors.OnSurface
+    surfaceTint = AppDarkColors.Primary
 )
 
 @Composable
 fun AeroTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

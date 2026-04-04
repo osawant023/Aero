@@ -1,4 +1,4 @@
-package com.app.aero
+package com.app.aero.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -55,12 +55,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.app.aero.R
 import com.app.aero.core.navigation.Graph
 import com.app.aero.core.navigation.Route
 import com.app.aero.core.navigation.TopLevelRoute
 import com.app.aero.core.snackbar.SnackBarController
 import com.app.aero.core.util.CollectFlowEvents
-import com.app.aero.ui.theme.AeroTheme
+import com.app.aero.core.ui.theme.AeroTheme
+import com.app.aero.presentation.component.UiComingSoon
+import com.app.aero.presentation.component.UiSplashScreen
+import com.app.aero.presentation.feature_feed.UiFeedScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -147,9 +151,9 @@ fun App() {
                                         }
                                     },
                                     colors = NavigationBarItemDefaults.colors().copy(
-                                        selectedIconColor = MaterialTheme.colorScheme.onSurface,
-                                        selectedTextColor = MaterialTheme.colorScheme.onSurface,
-                                        selectedIndicatorColor = Color.Unspecified,
+                                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                                        selectedIndicatorColor = Color.Transparent,
                                         unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(
                                             alpha = 0.5f
                                         ),
@@ -178,15 +182,15 @@ fun App() {
                         allRoutes()
                     }
 
-                    navigation<Graph.Portfolio>(startDestination = Route.FeedList) {
+                    navigation<Graph.Portfolio>(startDestination = Route.ComingSoon) {
                         allRoutes()
                     }
 
-                    navigation<Graph.Orders>(startDestination = Route.FeedList) {
+                    navigation<Graph.Orders>(startDestination = Route.ComingSoon) {
                         allRoutes()
                     }
 
-                    navigation<Graph.User>(startDestination = Route.FeedList) {
+                    navigation<Graph.User>(startDestination = Route.ComingSoon) {
                         allRoutes()
                     }
 
@@ -220,44 +224,16 @@ fun App() {
     }
 }
 
-@Composable
-fun UiSplashScreen() {
-    val navController = LocalNavController.current
-    LaunchedEffect(Unit) {
-        delay(2000)
-        navController.navigate(Graph.Market){
-            popUpTo(Route.SplashScreen){
-                inclusive = true
-            }
-        }
-    }
-    Box(modifier = Modifier.fillMaxSize()) {
-        Text(
-            modifier = Modifier.align(Alignment.Center),
-            text = "Splash",
-            textAlign = TextAlign.Center
-        )
-    }
-}
 
 private fun NavGraphBuilder.allRoutes() {
     composable<Route.FeedList>{
-        Box(modifier = Modifier.fillMaxSize()) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = "Feed List",
-                textAlign = TextAlign.Center
-            )
-        }
+        UiFeedScreen()
     }
     composable<Route.FeedDetails> {
         val user: Route.FeedDetails = it.toRoute()
-        Box(modifier = Modifier.fillMaxSize()) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = "Feed Details",
-                textAlign = TextAlign.Center
-            )
-        }
+
+    }
+    composable<Route.ComingSoon> {
+        UiComingSoon()
     }
 }

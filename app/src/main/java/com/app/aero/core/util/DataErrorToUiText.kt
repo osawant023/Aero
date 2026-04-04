@@ -1,5 +1,7 @@
 package com.app.aero.core.util
 
+import com.app.aero.core.ui.UiText
+
 
 fun DataError.toUiText(): UiText {
     /*val stringRes = when(this) {

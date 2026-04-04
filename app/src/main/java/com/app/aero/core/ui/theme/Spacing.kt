@@ -1,7 +1,6 @@
-package com.app.aero.ui.theme
+package com.app.aero.core.ui.theme
 
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.unit.dp
 
 data class Spacing(
     val xs: Int = 4,

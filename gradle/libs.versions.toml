@@ -15,6 +15,7 @@ navigationCompose = "2.9.7"
 kotlinxSerialisationPlugin = "2.3.20"
 kotlinxSerializationJson = "1.10.0"
 koin-bom = "4.2.0"
+koin-plugin = "0.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +53,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 #--
 kotlinx-serialisation = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerialisationPlugin" }
+koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koin-plugin" }
 
 [bundles]
 koin = ["koin-compose", "koin-android","koin-core", "koin-compose-viewmodel","koin-ktor"]

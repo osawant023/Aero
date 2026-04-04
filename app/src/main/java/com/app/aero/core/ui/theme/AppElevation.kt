@@ -1,4 +1,4 @@
-package com.app.aero.ui.theme
+package com.app.aero.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
