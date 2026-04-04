@@ -1,4 +1,4 @@
-package com.app.aero.data
+package com.app.aero.data.model
 
 import com.app.aero.domain.model.DtoStock
 import kotlinx.serialization.Serializable

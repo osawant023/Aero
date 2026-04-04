@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.aero.domain.model.DtoStock
 import com.app.aero.domain.repo.FeedRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -18,18 +20,24 @@ class FeedViewModel(private val repository: FeedRepository): ViewModel() {
     init {
         loadStocks()
     }
-
+    private val _navigateTo = MutableSharedFlow<Pair<String, String>>()
+    val navigateTo: SharedFlow<Pair<String, String>> = _navigateTo
     fun process(intent: FeedIntent) {
         when (intent) {
             FeedIntent.LoadData -> loadStocks()
             is FeedIntent.UpdateQuery -> filterStocks(intent.query)
+            is FeedIntent.NavigateToFeedDetails -> {
+                viewModelScope.launch {
+                    _navigateTo.emit(Pair("details" , intent.symbol))
+                }
+            }
         }
     }
     private fun filterStocks(query: String) {
         val filtered = if (query.isBlank()) {
-            _state.value.stocks
+            allStocks
         } else {
-            _state.value.stocks.filter {
+            allStocks.filter {
                 it.symbol.contains(query, ignoreCase = true)
             }
         }

@@ -30,7 +30,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -60,12 +59,12 @@ import com.app.aero.core.navigation.Graph
 import com.app.aero.core.navigation.Route
 import com.app.aero.core.navigation.TopLevelRoute
 import com.app.aero.core.snackbar.SnackBarController
-import com.app.aero.core.util.CollectFlowEvents
 import com.app.aero.core.ui.theme.AeroTheme
+import com.app.aero.core.util.CollectFlowEvents
 import com.app.aero.presentation.component.UiComingSoon
 import com.app.aero.presentation.component.UiSplashScreen
 import com.app.aero.presentation.feature_feed.UiFeedScreen
-import kotlinx.coroutines.delay
+import com.app.aero.presentation.feature_feed_details.UiFeedDetailsScreen
 import kotlinx.coroutines.launch
 
 val LocalNavController =
@@ -231,7 +230,7 @@ private fun NavGraphBuilder.allRoutes() {
     }
     composable<Route.FeedDetails> {
         val user: Route.FeedDetails = it.toRoute()
-
+        UiFeedDetailsScreen(user.symbol)
     }
     composable<Route.ComingSoon> {
         UiComingSoon()

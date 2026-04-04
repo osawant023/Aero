@@ -9,7 +9,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.app.aero.data.FeedRepositoryImpl
+import com.app.aero.app.LocalNavController
+import com.app.aero.core.navigation.Route
+import com.app.aero.core.ui.theme.AeroTheme
+import com.app.aero.core.util.CollectFlowEvents
+import com.app.aero.data.repository.FeedRepositoryImpl
 import com.app.aero.domain.model.DtoStock
 import com.app.aero.presentation.component.TopBar
 import com.app.aero.presentation.feature_feed.component.SearchBar
@@ -20,8 +24,14 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun UiFeedScreen(viewModel: FeedViewModel = koinViewModel<FeedViewModel>()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val navController = LocalNavController.current
+    CollectFlowEvents(viewModel.navigateTo) {
+        when(it.first){
+            "details" -> navController.navigate(Route.FeedDetails(it.second))
+        }
+    }
     UiFeedContent(state = state){
-
+        viewModel.process(it)
     }
 }
 
@@ -34,29 +44,33 @@ fun UiFeedContent(state: FeedState, onIntent: (FeedIntent)-> Unit) {
         })
         SortSection()
         HorizontalDivider()
-        StockList(state.stocks)
+        StockList(state.stocks , onIntent)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun UiFeedContentPreview() {
-    val state by produceState(
-        initialValue = FeedState()
-    ) {
-        val repo = FeedRepositoryImpl()
-        value = FeedState(stocks = repo.getStocks())
+    AeroTheme {
+        val state by produceState(
+            initialValue = FeedState()
+        ) {
+            val repo = FeedRepositoryImpl()
+            value = FeedState(stocks = repo.getStocks())
+        }
+        UiFeedContent(state = state, onIntent = {})
     }
-    UiFeedContent(state = state, onIntent = {})
 }
 
 
 
 @Composable
-fun StockList(stocks: List<DtoStock>) {
+fun StockList(stocks: List<DtoStock> , onIntent: (FeedIntent)-> Unit) {
     LazyColumn {
-        items(stocks) {
-            StockItem(it)
+        items(stocks) { stock ->
+            StockItem(stock) {
+                onIntent(FeedIntent.NavigateToFeedDetails(it))
+            }
         }
     }
 }

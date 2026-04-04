@@ -1,4 +1,4 @@
-package com.app.aero.core.ui
+package com.app.aero.core.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource

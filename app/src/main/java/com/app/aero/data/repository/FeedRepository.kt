@@ -1,6 +1,10 @@
-package com.app.aero.data
+package com.app.aero.data.repository
 
+import com.app.aero.data.model.StockData
+import com.app.aero.data.model.StockDetailsData
+import com.app.aero.data.model.toDomain
 import com.app.aero.domain.model.DtoStock
+import com.app.aero.domain.model.DtoStockDetails
 import com.app.aero.domain.repo.FeedRepository
 import kotlinx.serialization.json.Json
 
@@ -80,9 +84,45 @@ class FeedRepositoryImpl : FeedRepository {
   }
 ]
     """
+    private val jsonDetails = """
+[
+  {
+    "symbol": "NVDA",
+    "exchange": "NASDAQ",
+    "price": 135.58,
+    "change": 4.48,
+    "changePercent": 3.42,
+
+    "companyName": "NVIDIA Corporation",
+    "lastUpdated": "15:59:58",
+
+    "about": "NVIDIA Corporation focuses on personal computer graphics, GPUs, and artificial intelligence (AI). It operates through Graphics and Compute & Networking segments.",
+
+    "ceo": "Jensen Huang",
+    "founded": 1993,
+    "headquarters": "Santa Clara, CA",
+
+    "stats": {
+      "open": 132.10,
+      "prevClose": 131.10,
+      "high": 136.25,
+      "low": 131.50,
+      "volume": "42.5M",
+      "avgPrice": 134.12
+    },
+
+    "funds": 142850.00
+  }
+]"""
 
     override fun getStocks(): List<DtoStock> {
         val model = Json.decodeFromString<List<StockData>>(json)
         return model.map { it.toDomain() }
+    }
+
+    override fun getStocksDetails(symbol: String): DtoStockDetails {
+        val model = Json.decodeFromString<List<StockDetailsData>>(jsonDetails)
+        return model.find { it.symbol == symbol }?.toDomain() ?: model.first().toDomain()
+
     }
 }

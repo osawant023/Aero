@@ -12,6 +12,6 @@ sealed interface Route {
     data object ComingSoon : Route
 
     @Serializable
-    data class FeedDetails(val feedId:String) : Route
+    data class FeedDetails(val symbol:String) : Route
 
 }

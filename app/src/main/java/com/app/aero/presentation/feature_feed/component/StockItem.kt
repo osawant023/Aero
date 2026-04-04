@@ -1,11 +1,12 @@
 package com.app.aero.presentation.feature_feed.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,14 +18,15 @@ import androidx.compose.ui.unit.sp
 import com.app.aero.domain.model.DtoStock
 
 @Composable
-fun StockItem(stock: DtoStock) {
+fun StockItem(stock: DtoStock, onClick : (String) -> Unit) {
     val changeColor = if (stock.isPositive) Color(0xFF188038) else Color(0xFFD93025)
 
     Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .clickable { onClick(stock.symbol) },
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
@@ -39,6 +41,6 @@ fun StockItem(stock: DtoStock) {
             }
         }
 
-        Divider(color = Color(0xFFF1F3F4))
+        HorizontalDivider(color = Color(0xFFF1F3F4))
     }
 }
