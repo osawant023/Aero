@@ -3,7 +3,6 @@ package com.app.aero.presentation.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,10 +13,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,12 +27,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.aero.R
+import com.app.aero.core.ui.components.AppButton
+import com.app.aero.data.network.WebSocketController
 
 @Composable
 fun TopBar(
     isBackArrowVisible: Boolean = false,
-    onBackArrowClick: () -> Unit = {}
+    onBackArrowClick: () -> Unit = {},
+    onStart: () -> Unit = {},
+    onStop: () -> Unit = {}
 ) {
+    val isConnectionAlive by WebSocketController.socketConnection.collectAsState()
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,22 +74,19 @@ fun TopBar(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        StatusBadge()
+        StatusBadge(isConnectionAlive)
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        Button(
-            onClick = {},
-            shape = RoundedCornerShape(8.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
-        ) {
-            Text("START")
-        }
+        val text = if (isConnectionAlive) "Stop" else "Start"
+        AppButton(text, positive = !isConnectionAlive, Modifier.clickable {
+            if (isConnectionAlive) onStop.invoke() else onStart.invoke()
+        })
     }
 }
 
 @Composable
-fun StatusBadge() {
+fun StatusBadge(isConnectionAlive: Boolean) {
     Row(
         modifier = Modifier
             .background(Color(0xFFE6F4EA), RoundedCornerShape(50))
@@ -97,9 +100,9 @@ fun StatusBadge() {
         )
         Spacer(modifier = Modifier.width(6.dp))
         Text(
-            "CONNECTED",
+            if (isConnectionAlive) "CONNECTED" else "DISCONNECTED",
             fontSize = 12.sp,
-            color = Color(0xFF1E8E3E),
+            color = if (isConnectionAlive) Color(0xFF1E8E3E) else MaterialTheme.colorScheme.tertiary,
             fontWeight = FontWeight.Medium
         )
     }

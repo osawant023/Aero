@@ -23,23 +23,29 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.aero.app.LocalNavController
 import com.app.aero.core.ui.theme.AeroTheme
 import com.app.aero.core.ui.theme.LocalSpacing
-import com.app.aero.data.repository.FeedRepositoryImpl
+import com.app.aero.data.model.StockDetailsData
+import com.app.aero.data.model.toDomain
+import com.app.aero.data.network.mockJson
 import com.app.aero.presentation.component.TopBar
 import com.app.aero.presentation.feature_feed_details.components.AboutCard
 import com.app.aero.presentation.feature_feed_details.components.ActionCard
 import com.app.aero.presentation.feature_feed_details.components.HeaderSection
 import com.app.aero.presentation.feature_feed_details.components.StatsCard
+import kotlinx.serialization.json.Json
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun UiFeedDetailsScreen(symbol: String,viewModel: FeedDetailViewModel = koinViewModel<FeedDetailViewModel>()) {
+fun UiFeedDetailsScreen(
+    symbol: String,
+    viewModel: FeedDetailViewModel = koinViewModel<FeedDetailViewModel>()
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
     LaunchedEffect(Unit) {
         viewModel.process(FeedDetailIntent.Load(symbol))
     }
-    UiFeedDetail(state){
-        when(it){
+    UiFeedDetail(state) {
+        when (it) {
             FeedDetailIntent.NavigateUp -> navController.navigateUp()
             else -> viewModel.process(it)
         }
@@ -47,9 +53,8 @@ fun UiFeedDetailsScreen(symbol: String,viewModel: FeedDetailViewModel = koinView
 }
 
 
-
 @Composable
-fun UiFeedDetail(state: FeedDetailState , onIntent: (FeedDetailIntent)-> Unit) {
+fun UiFeedDetail(state: FeedDetailState, onIntent: (FeedDetailIntent) -> Unit) {
     val spacing = LocalSpacing.current
     if (state.isLoading) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -68,9 +73,16 @@ fun UiFeedDetail(state: FeedDetailState , onIntent: (FeedDetailIntent)-> Unit) {
 
     ) {
 
-        TopBar(isBackArrowVisible = true){
-            onIntent(FeedDetailIntent.NavigateUp)
-        }
+        TopBar(
+            isBackArrowVisible = true,
+            onBackArrowClick = {
+                onIntent(FeedDetailIntent.NavigateUp)
+            }, onStart = {
+                onIntent(FeedDetailIntent.StartConnection)
+            }, onStop = {
+                onIntent(FeedDetailIntent.StopConnection)
+            }
+        )
 
         Column(modifier = Modifier.padding(15.dp)) {
             HeaderSection(data)
@@ -97,9 +109,10 @@ fun UiFeedDetailsContentPreview() {
         val state by produceState(
             initialValue = FeedDetailState()
         ) {
-            val repo = FeedRepositoryImpl()
-            value = FeedDetailState(data = repo.getStocksDetails(""))
+            val mockData =
+                Json.decodeFromString<List<StockDetailsData>>(mockJson).map { it.toDomain() }
+            value = FeedDetailState(data = mockData.first())
         }
-        UiFeedDetail(state = state){}
+        UiFeedDetail(state = state) {}
     }
 }

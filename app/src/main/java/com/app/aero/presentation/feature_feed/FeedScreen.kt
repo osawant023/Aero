@@ -13,12 +13,15 @@ import com.app.aero.app.LocalNavController
 import com.app.aero.core.navigation.Route
 import com.app.aero.core.ui.theme.AeroTheme
 import com.app.aero.core.util.CollectFlowEvents
-import com.app.aero.data.repository.FeedRepositoryImpl
-import com.app.aero.domain.model.DtoStock
+import com.app.aero.data.model.StockDetailsData
+import com.app.aero.data.model.toDomain
+import com.app.aero.data.network.mockJson
+import com.app.aero.domain.model.DtoStockDetails
 import com.app.aero.presentation.component.TopBar
 import com.app.aero.presentation.feature_feed.component.SearchBar
 import com.app.aero.presentation.feature_feed.component.SortSection
 import com.app.aero.presentation.feature_feed.component.StockItem
+import kotlinx.serialization.json.Json
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -38,7 +41,7 @@ fun UiFeedScreen(viewModel: FeedViewModel = koinViewModel<FeedViewModel>()) {
 @Composable
 fun UiFeedContent(state: FeedState, onIntent: (FeedIntent)-> Unit) {
     Column {
-        TopBar()
+        TopBar(onStart = {onIntent(FeedIntent.StartConnection)}, onStop = {onIntent(FeedIntent.StopConnection)})
         SearchBar(state.query, onQueryChange = {
             onIntent(FeedIntent.UpdateQuery(it))
         })
@@ -55,8 +58,8 @@ fun UiFeedContentPreview() {
         val state by produceState(
             initialValue = FeedState()
         ) {
-            val repo = FeedRepositoryImpl()
-            value = FeedState(stocks = repo.getStocks())
+            val mockData = Json.decodeFromString<List<StockDetailsData>>(mockJson).map { it.toDomain() }
+            value = FeedState(stocks = mockData)
         }
         UiFeedContent(state = state, onIntent = {})
     }
@@ -65,11 +68,11 @@ fun UiFeedContentPreview() {
 
 
 @Composable
-fun StockList(stocks: List<DtoStock> , onIntent: (FeedIntent)-> Unit) {
+fun StockList(stocks: List<DtoStockDetails>, onIntent: (FeedIntent)-> Unit) {
     LazyColumn {
         items(stocks) { stock ->
             StockItem(stock) {
-                onIntent(FeedIntent.NavigateToFeedDetails(it))
+                onIntent(FeedIntent.NavigateToFeedDetails(stock.symbol))
             }
         }
     }

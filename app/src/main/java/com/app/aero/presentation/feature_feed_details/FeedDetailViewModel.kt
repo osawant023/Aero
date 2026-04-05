@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class FeedDetailViewModel(private val repository: FeedRepository): ViewModel() {
+class FeedDetailViewModel(private val repository: FeedRepository) : ViewModel() {
 
     private val _state = MutableStateFlow(FeedDetailState())
     val state: StateFlow<FeedDetailState> = _state
@@ -17,21 +17,23 @@ class FeedDetailViewModel(private val repository: FeedRepository): ViewModel() {
     fun process(intent: FeedDetailIntent) {
         when (intent) {
             is FeedDetailIntent.Load -> load(intent.symbol)
+            is FeedDetailIntent.StartConnection -> repository.start()
+            is FeedDetailIntent.StopConnection -> repository.stop()
             else -> {}
         }
     }
 
     private fun load(symbol: String) {
         viewModelScope.launch {
-            //_state.update { it.copy(isLoading = true) }
-            //delay(2000)
-            val item = repository.getStocksDetails(symbol)
-            _state.update {
-                it.copy(
-                    isLoading = false,
-                    data = item
-                )
-            }
+            repository.observeStock(symbol)
+                .collect { model ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            data = model
+                        )
+                    }
+                }
         }
     }
 
