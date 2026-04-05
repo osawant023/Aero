@@ -27,7 +27,8 @@ private val DarkColorScheme = darkColorScheme(
     background = AppDarkColors.Background,
     surface = AppDarkColors.Surface,
     onSurface = AppDarkColors.onSurface,
-
+    surfaceVariant = AppDarkColors.SurfaceVariant,
+    onSurfaceVariant = AppDarkColors.onSurfaceVariant,
     surfaceTint = AppDarkColors.Primary
 )
 
@@ -45,6 +46,8 @@ private val LightColorScheme = lightColorScheme(
 
     background = AppColors.Background,
     surface = AppColors.Surface,
+    surfaceVariant = AppColors.SurfaceVariant,
+    onSurfaceVariant = AppColors.onSurfaceVariant,
     onSurface = AppColors.onSurface,
 
     surfaceTint = AppDarkColors.Primary
@@ -63,7 +66,7 @@ fun AeroTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
+        darkTheme -> LightColorScheme
         else -> LightColorScheme
     }
     CompositionLocalProvider(

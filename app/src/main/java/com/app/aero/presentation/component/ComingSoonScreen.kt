@@ -26,14 +26,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.app.aero.core.ui.components.AppPrimaryButton
 
 @Composable
-fun UiComingSoon(
+fun UiTitleSubtitleScreen(
     title: String = "Coming Soon",
     subtitle: String = "We’re working hard to bring this feature to you.",
-    onNotifyClick: () -> Unit = {}
+    imageVector: ImageVector = Icons.Default.Schedule,
+    onNotifyClick: (() -> Unit) ?= null
 ) {
 
     val infiniteTransition = rememberInfiniteTransition(label = "")
@@ -71,7 +73,7 @@ fun UiComingSoon(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.Schedule,
+                    imageVector = imageVector,
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.size(48.dp)
@@ -94,8 +96,9 @@ fun UiComingSoon(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-
-            AppPrimaryButton("Notify Me", onClick = onNotifyClick)
+            onNotifyClick?.let {
+                AppPrimaryButton("Notify Me", onClick = onNotifyClick)
+            }
         }
     }
 }

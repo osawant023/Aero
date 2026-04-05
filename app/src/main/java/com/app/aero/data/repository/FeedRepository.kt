@@ -2,14 +2,14 @@ package com.app.aero.data.repository
 
 import com.app.aero.data.model.StockDetailsData
 import com.app.aero.data.model.toDomain
-import com.app.aero.data.network.StockWebSocketManager
+import com.app.aero.data.network.WebSocketClient
 import com.app.aero.domain.model.DtoStockDetails
 import com.app.aero.domain.repo.FeedRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 
-class FeedRepositoryImpl(private val socketManager: StockWebSocketManager) : FeedRepository {
+class FeedRepositoryImpl(private val socketManager: WebSocketClient) : FeedRepository {
     val stocks: StateFlow<List<StockDetailsData>> = socketManager.prices
 
     override fun observeStocks(): Flow<List<DtoStockDetails>> {

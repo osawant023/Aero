@@ -87,16 +87,19 @@ fun TopBar(
 
 @Composable
 fun StatusBadge(isConnectionAlive: Boolean) {
+    val color = if (isConnectionAlive) Color(0xFFE6F4EA) else Color(0xFFF3BBB9)
+    val status = if (isConnectionAlive) Color.Green else Color.Red
+
     Row(
         modifier = Modifier
-            .background(Color(0xFFE6F4EA), RoundedCornerShape(50))
+            .background(color, RoundedCornerShape(50))
             .padding(horizontal = 10.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
                 .size(6.dp)
-                .background(Color.Green, CircleShape)
+                .background(status, CircleShape)
         )
         Spacer(modifier = Modifier.width(6.dp))
         Text(

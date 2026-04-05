@@ -18,7 +18,7 @@ import kotlinx.serialization.json.Json
 import kotlin.random.Random
 
 
-class StockWebSocketManager(private val client: HttpClient) {
+class WebSocketClient(private val client: HttpClient) {
 
     val initialList = Json.decodeFromString<List<StockDetailsData>>(mockJson)
     private val _prices = MutableStateFlow(initialList)

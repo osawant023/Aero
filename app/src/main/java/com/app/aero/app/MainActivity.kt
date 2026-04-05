@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.NetworkCheck
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -43,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -61,11 +64,12 @@ import com.app.aero.core.navigation.TopLevelRoute
 import com.app.aero.core.snackbar.SnackBarController
 import com.app.aero.core.ui.theme.AeroTheme
 import com.app.aero.core.util.CollectFlowEvents
-import com.app.aero.presentation.component.UiComingSoon
 import com.app.aero.presentation.component.UiSplashScreen
+import com.app.aero.presentation.component.UiTitleSubtitleScreen
 import com.app.aero.presentation.feature_feed.UiFeedScreen
 import com.app.aero.presentation.feature_feed_details.UiFeedDetailsScreen
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 val LocalNavController =
     compositionLocalOf<NavHostController> { error("CompositionLocal LocalNavController not present") }
@@ -77,12 +81,25 @@ val topLevelRoutes = listOf(
 )
 
 class MainActivity : ComponentActivity() {
+
+    val networkViewModel : ConnectivityViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AeroTheme {
-                App()
+                val isConnectedToNetwork = networkViewModel.isConnected.collectAsStateWithLifecycle()
+                Box{
+                    App()
+                    if(!isConnectedToNetwork.value){
+                        UiTitleSubtitleScreen(
+                            "Opps... No internet connection!",
+                            "Please check with your internet connection, and try again.",
+                            imageVector = Icons.Filled.NetworkCheck
+                        )
+                    }
+                }
+
             }
         }
     }
@@ -233,6 +250,6 @@ private fun NavGraphBuilder.allRoutes() {
         UiFeedDetailsScreen(user.symbol)
     }
     composable<Route.ComingSoon> {
-        UiComingSoon()
+        UiTitleSubtitleScreen(){}
     }
 }

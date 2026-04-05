@@ -21,7 +21,8 @@ object AppColors {
 
     // Text
     val onSurface = Color(0xFF1B1C1C)
-    val onSurfaceVariant = Color(0xFF424753)
+    val SurfaceVariant = Color(0xFFAEB0B4)
+    val onSurfaceVariant = Color(0xFFFCFEFF)
 }
 object AppDarkColors {
 
@@ -39,10 +40,11 @@ object AppDarkColors {
 
     // Deep Carbon Layering
     val Surface = Color(0xFF303030)
-    val Background = Color(0xFFF5F3F3)
+    val Background = Color(0xFF1F1E1E)
 
     // Text
-    val onSurface = Color(0xFF1B1C1C)
+    val onSurface = Color(0xFFFFFFFF)
+    val SurfaceVariant = Color(0xFFFCFEFF)
     val onSurfaceVariant = Color(0xFF424753)
 
 }

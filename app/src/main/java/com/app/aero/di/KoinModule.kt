@@ -1,6 +1,9 @@
 package com.app.aero.di
 
-import com.app.aero.data.network.StockWebSocketManager
+import com.app.aero.app.ConnectivityObserver
+import com.app.aero.app.ConnectivityViewModel
+import com.app.aero.app.NetworkConnectivityObserver
+import com.app.aero.data.network.WebSocketClient
 import com.app.aero.data.repository.FeedRepositoryImpl
 import com.app.aero.domain.repo.FeedRepository
 import com.app.aero.presentation.feature_feed.FeedViewModel
@@ -9,14 +12,12 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.pingInterval
+import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.koin.plugin.module.dsl.bind
-import org.koin.plugin.module.dsl.single
-import org.koin.plugin.module.dsl.viewModel
 import kotlin.time.Duration.Companion.milliseconds
 
 val koinAppModule = module {
-
     single {
         HttpClient(CIO) {
             install(WebSockets) {
@@ -25,8 +26,13 @@ val koinAppModule = module {
         }
     }
 
-    single<StockWebSocketManager>()
-    single<FeedRepositoryImpl>().bind(FeedRepository::class)
-    viewModel<FeedViewModel>()
-    viewModel<FeedDetailViewModel>()
+    single { WebSocketClient(get()) }
+
+    single { FeedRepositoryImpl(get()) } bind FeedRepository::class
+
+    viewModel { FeedViewModel(get()) }
+    viewModel { FeedDetailViewModel(get()) }
+
+    single { NetworkConnectivityObserver(get()) } bind ConnectivityObserver::class
+    single { ConnectivityViewModel(get()) }
 }
