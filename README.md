@@ -58,13 +58,13 @@ You can download the latest debug APK for testing:
 
 ## 📱 Screenshots
 
-<p align="center">
-  <img src="info/Screenshot%202026-04-05%20at%207.58.16 PM.png" width="300" />
-  <img src="info/Screenshot%202026-04-05%20at%207.58.25 PM.png" width="300" />
+<p align="start">
+  <img src="info/Screenshot%202026-04-05%20at%207.58.16 PM.png" width="300" height="640" />
+  <img src="info/Screenshot%202026-04-05%20at%207.58.25 PM.png" width="300" height="640" />
 </p>
 
 ### 🎥 Demo
-[Watch the Screen Recording](info/demo_video.gif)
+![Watch the Screen Recording](info/demo_video.gif)
 
 ---
 Developed with ❤️ using Kotlin and Jetpack Compose.
