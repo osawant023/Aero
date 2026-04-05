@@ -64,7 +64,7 @@ You can download the latest debug APK for testing:
 </p>
 
 ### 🎥 Demo
-[Watch the Screen Recording](info/Screen_recording_20260405_195907.webm)
+[Watch the Screen Recording](info/demo_video.gif)
 
 ---
 Developed with ❤️ using Kotlin and Jetpack Compose.
